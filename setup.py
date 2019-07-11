@@ -29,7 +29,7 @@ setup(
     license='GNU GPLv2+',
     packages=find_packages("src"),
     package_dir={"": "src"},
-    install_requires=["flask>=1", "flask_restful"],
+    install_requires=["flask>=1", "flask_restful", "flask_redis"],
     entry_points = {
         'console_scripts': ['elivepatch-server=elivepatch_server:run']
     }

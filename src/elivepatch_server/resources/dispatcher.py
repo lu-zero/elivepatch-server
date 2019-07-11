@@ -59,6 +59,7 @@ class SendLivePatch(Resource):
         self.reqparse.add_argument('UUID', type=str, required=False,
                                    help='No task title provided',
                                    location='json')
+        self.redis = kwargs['redis']
         super(SendLivePatch, self).__init__()
         pass
 
@@ -95,6 +96,7 @@ class GetFiles(Resource):
                                    help='No task title provided',
                                    location='headers')
         self.cmdline_args = kwargs['cmdline_args']
+        self.redis = kwargs['redis']
         super(GetFiles, self).__init__()
         pass
 

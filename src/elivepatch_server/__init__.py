@@ -10,6 +10,7 @@ __license__ = 'GNU GPLv2+'
 
 from flask import Flask
 from flask_restful import Api
+from flask_redis import FlaskRedis
 import multiprocessing
 import argparse
 from .resources import AgentInfo, dispatcher
@@ -52,7 +53,10 @@ def create_app(cmdline_args):
     """
 
     app = Flask(__name__, static_url_path="")
+    redis_client = FlaskRedis(app)
     api = Api(app)
+
+    print(app.extensions)
 
     api.add_resource(AgentInfo.AgentAPI, '/elivepatch/api/',
                      endpoint='root')
@@ -64,12 +68,13 @@ def create_app(cmdline_args):
     # where to retrieve the live patch when ready
     api.add_resource(dispatcher.SendLivePatch,
                      '/elivepatch/api/v1.0/send_livepatch',
-                     endpoint='send_livepatch')
+                     endpoint='send_livepatch',
+                     resource_class_kwargs={'redis': redis_client})
 
     # where to receive the config file
     api.add_resource(dispatcher.GetFiles, '/elivepatch/api/v1.0/get_files',
                      endpoint='config',
-                     resource_class_kwargs={'cmdline_args': cmdline_args})
+                     resource_class_kwargs={'cmdline_args': cmdline_args, 'redis': redis_client})
     return app
 
 
